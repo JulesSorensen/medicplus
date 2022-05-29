@@ -12,21 +12,16 @@
 <body>
     <div id="app" class="bg-gray-200 h-screen w-screen">
         <?php
-        include("Bdd.php");
+        include("db/Bdd.php");
         session_start();
         // error_reporting(E_ERROR | E_PARSE);
 
         if (isset($_SESSION["online"])) {
             if(isset($_GET['p'])) {
-                $page = $_GET['p'] . ".php";
+                include("header.php");
                 switch ($_GET['p']) {
-                    case 'home':
-                        include("header.php");
-                        include("pages/$page"); break;
                     default:
-                        $_GET['p'] = "login";
-                        include("pages/login.php");
-                        break;
+                        include("pages/home.php"); break;
                 }
             }
         } else {
@@ -35,6 +30,12 @@
         }
         ?>
     </div>
+    
+    <script>
+        if ( window.history.replaceState ) { // don't resend forms on reload/back
+            window.history.replaceState( null, null, window.location.href );
+        }
+    </script>
 </body>
 
 </html>
