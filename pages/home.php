@@ -37,6 +37,9 @@ $monthIndex = $month - 1;
         <?php echo "$monthList[$monthIndex] $year"; ?>
       </span>
       <div class="buttons">
+        <button class="bg-gray-100 font-semibold p-1 rounded-lg hover:bg-gray-200">
+          Current month
+        </button>
         <button id="pmonth" class="p-1">
           <svg width="1em" fill="gray" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left-circle"
             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
