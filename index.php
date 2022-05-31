@@ -20,6 +20,10 @@
             if(isset($_GET['p'])) {
                 include("header.php");
                 switch ($_GET['p']) {
+                
+                case "planif":
+                    include("pages/planif.php"); break;
+
                     default:
                         include("pages/home.php"); break;
                 }

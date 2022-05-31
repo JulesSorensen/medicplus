@@ -17,7 +17,7 @@ if (isset($_POST["loginSubmit"])) {
                 if ($Usr->password == $mdp) {
                     $trouve = TRUE;
                     $_SESSION["online"] = true;
-                    $_SESSION["userId"] = [
+                    $_SESSION["user"] = [
                         "id" => $Usr->id,
                         "name" => $Usr->name,
                         "type" => $Usr->type,

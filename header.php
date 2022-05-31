@@ -1,4 +1,5 @@
-<header>
+<?php
+print '<header>
     <nav
     class="
         flex flex-wrap
@@ -43,28 +44,44 @@
                 md:flex
                 md:justify-between 
                 md:pt-0"
-            >
-            <li>
-                <a class="md:p-4 py-2 block hover:text-gray-400" href="#"
+            >';
+            if(isset($_SESSION["online"])){
+            print'<li>
+                <a class="md:p-4 py-2 block hover:text-gray-400" href="?p=home"
                 >Accueil</a
                 >
-            </li>
-            <li>
-                <a class="md:p-4 py-2 block hover:text-gray-400" href="#"
-                >Planification</a
-                >
-            </li>
-            <li>
-                <a
-                class="md:p-4 py-2 block hover:text-red-400 text-red-500"
-                href="#"
-                >Déconnexion</a
-                >
-            </li>
-            </ul>
+            </li>';
+            }
+            if(isset($_SESSION["online"]) && isset($_SESSION["user"]["type"]) == "sec"){
+                print'<li>
+                    <form method="POST">
+                    <button type="submit" name="deco" id="deco"><a class="md:p-4 py-2 block hover:text-gray-400" href="?p=planif"
+                    >Planification</a
+                    ></button>
+                    </form>
+                </li>';
+            }
+            if(isset($_SESSION["online"])){
+                print'<li>
+                    <form method="POST">
+                    <button type="submit" name="deco" id="deco"><a 
+                    class="md:p-4 py-2 block hover:text-red-400 text-red-500"
+                    >Déconnexion</a
+                    ></button>
+                    </form>
+                </li>';
+                if(isset($_POST['deco'])){
+                    session_destroy();
+                    header('refresh:0');
+                }
+            }
+            
+            print'</ul>
         </div>
     </nav>
-</header>
+</header>';
+?>
+
 
 <script>
     const button = document.querySelector('#menu-button');  
