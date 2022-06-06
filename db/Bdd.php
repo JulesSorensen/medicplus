@@ -9,7 +9,7 @@
         $Bdd = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8",$bdUser,$bdPasswd);
         $Bdd->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     }
-    catch (PDOExsception $e)
+    catch (PDOException $e)
     {
         echo "IMPOSSIBLE DE SE CONNECTER";
     }
