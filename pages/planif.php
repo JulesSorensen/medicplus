@@ -6,26 +6,44 @@
 //POST RESUME = resume
 //POST SUBMIT = btnsub
 
-$postTab = [];
-print '<form action="post">
-    <div class="form1">
-        <label for="name">Nom / Prénom :</label>
-        <input name="name" id="name" type="text">
+if (isset($_POST['btnsub'])) {
+    $sql = "INSERT INTO `meet` (`userId`, `clientName`, `clientMail`, `date`, `place`, `resume`, `qcm`, `validated`)";
+    $sql .= " VALUES (".$_POST['medecins'].", '".$_POST['name']."', '".$_POST['email']."', '".$_POST['date']." ".$_POST["hour"]."', '".$_POST['lieu']."', '".$_POST['resume']."', '', true)";
+
+    $result = $Bdd->query($sql);
+    $result->fetch();
+    $msg = "Le rendez-vous de " . $_POST['name'] . " a bien été validé";
+}
+
+print '<title>Plannification</title>
+    <form method="post">
+    <div class="form1 h-screen flex justify-center flex-col px-96">';
+
+    if (isset($msg)) {
+        print'<p class="text-green-500 mx-auto">'.$msg.'</p>';
+        unset($msg);
+    }
+
+    print'<label for="name">Nom / Prénom :</label>
+        <input class="rounded pl-1" name="name" id="name" type="text">
 
         <label for="email">Addresse Mail :</label>
-        <input name="email" id="email" type="mail">
+        <input class="rounded pl-1" name="email" id="email" type="mail">
 
         <label for="date">Date :</label>
-        <input name="date" id="date" type="date">
+        <input class="rounded pl-1" name="date" id="date" type="date">
+
+        <label for="hour">Heure :</label>
+        <input class="rounded pl-1" name="hour" id="hour" type="time">
 
         <label for="lieu">Lieu :</label>
-        <input name="lieu" id="lieu" type="text">
+        <input class="rounded pl-1" name="lieu" id="lieu" type="text">
 
         <label for="resume">Résumé :</label>
-        <textarea name="resume" id="resume"></textarea>
+        <textarea class="rounded pl-1" name="resume" id="resume"></textarea>
 
         <label for="medecins">Médecins :</label>
-        <select name="medecins" id="medecins">';
+        <select class="rounded pl-1" name="medecins" id="medecins">';
             $medecins = [];
 
             $sql = "SELECT * FROM user ";
@@ -40,26 +58,11 @@ print '<form action="post">
             }
 
             foreach ($medecins as $key) {
-                print "test";
-                print "<option value='$key->userid'>".$key->name."</option>";
+                print "<option value='$key->id'>".$key->name."</option>";
             }
-            
-
         print'</select>
-
-        <button type="submit" name="btnsub" id="btnsub"><a class="md:p-4 py-2 block hover:text-gray-400" href="?p=planif">Envoyer</a></button>
+        <button class="rounded bg-white m-3 w-52 mx-auto md:p-4 py-2 hover:bg-green-500 hover:text-black" type="submit" name="btnsub" id="btnsub">Envoyer</button>
     </div>
 </form>';
 
-
-if (isset($_POST['btnsub'])) {
-    $sql = "INSERT INTO `meet`(`clientName`)";
-    $sql .= " VALUES ('".$_POST['name']."')";
-
-    $result = $Bdd->query($sql);
-    $result->fetch();
-
-}
-
 ?>
-

@@ -47,7 +47,7 @@ print '<header>
             >';
             if(isset($_SESSION["online"])){
             print'<li>
-                <a class="md:p-4 py-2 block hover:text-gray-400" href="?p=home"
+                <a class="md:p-4 py-2 block hover:text-gray-400" href="home"
                 >Accueil</a
                 >
             </li>';
@@ -55,7 +55,7 @@ print '<header>
             if(isset($_SESSION["online"]) && isset($_SESSION["user"]["type"]) && $_SESSION["user"]["type"] == "sec"){
                 print'<li>
                     <form method="POST">
-                    <button type="submit" name="deco" id="deco"><a class="md:p-4 py-2 block hover:text-gray-400" href="?p=planif"
+                    <button type="submit" name="deco" id="deco"><a class="md:p-4 py-2 block hover:text-gray-400" href="planif"
                     >Planification</a
                     ></button>
                     </form>

@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div id="app" class="bg-gray-200 h-screen w-screen">
+    <div id="app" class="bg-gray-200 h-full w-full">
         <?php
         include("db/Bdd.php");
         session_start();

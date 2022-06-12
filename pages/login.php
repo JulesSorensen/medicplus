@@ -39,7 +39,7 @@ if (isset($_POST["loginSubmit"])) {
 ?>
 
 <title>Connexion</title>
-<div class="loginPage h-full w-full flex justify-center">
+<div class="loginPage h-screen w-screen flex justify-center">
     <div class="login-box w-[20rem] h-[20rem] flex flex-col justify-center align-middle m-auto p-5 bg-white rounded-lg">
         <img class="w-20 m-auto" src="images/medicplus.png" alt="Medic+">
         <h2 class="font-bold mx-auto mb-3">Espace de connexion</h2>
