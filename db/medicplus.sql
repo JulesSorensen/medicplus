@@ -2,10 +2,10 @@
 -- version 5.0.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 12, 2022 at 11:09 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.11
+-- Hôte : 127.0.0.1
+-- Généré le : lun. 13 juin 2022 à 16:46
+-- Version du serveur :  10.4.14-MariaDB
+-- Version de PHP : 7.4.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,21 +18,22 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `medicplus`
+-- Base de données : `medicplus`
 --
-CREATE DATABASE IF NOT EXISTS `medicplus` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `medicplus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `medicplus`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `meet`
+-- Structure de la table `meet`
 --
 
 CREATE TABLE `meet` (
   `id` int(11) NOT NULL,
   `userid` varchar(255) DEFAULT NULL,
   `clientName` varchar(255) DEFAULT NULL,
+  `clientLastname` varchar(255) NOT NULL,
   `clientMail` varchar(255) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `place` varchar(255) DEFAULT NULL,
@@ -41,67 +42,58 @@ CREATE TABLE `meet` (
   `validated` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `meet`
---
-
-INSERT INTO `meet` (`id`, `userid`, `clientName`, `clientMail`, `date`, `place`, `resume`, `qcm`, `validated`) VALUES
-(1, '2', 'Lucas', 'lcornelis@myges.fr', '2022-06-01 12:00:00', 'Chez lucas', 'Cancer de niveau 4', '', 1),
-(2, '2', 'Morike', 'mkonate@efficom-lille.com', '2022-06-03 00:55:00', 'Efficom', 'Il a le covid', '', 1),
-(3, '2', 'Jules', 'jladeiro@myges.fr', '2022-06-14 23:01:00', 'Efficom', 'Ca va pas vraiment, mots de têtes', '', 1),
-(4, '3', 'Morike', 'mkonate@efficom-lille.com', '2022-06-16 08:08:00', 'Efficom Lille', 'Encore le covid, Lucas prend en charge!', '', 1);
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Structure de la table `user`
 --
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `mail` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `user`
+-- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `password`, `mail`, `type`) VALUES
-(1, 'Jules', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'jladeiro@myges.fr', 'sec'),
-(2, 'Yan', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'ysouetre@myges.fr', 'med'),
-(3, 'Lucas', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'lcornelis@myges.fr', 'med');
+INSERT INTO `user` (`id`, `name`, `lastname`, `password`, `mail`, `type`) VALUES
+(1, 'jules', '', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'jladeiro@myges.fr', 'sec'),
+(2, 'yan', '', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'ysouetre@myges.fr', 'med'),
+(3, 'test', 'user', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'testuser@gmail.com', 'usr');
 
 --
--- Indexes for dumped tables
+-- Index pour les tables déchargées
 --
 
 --
--- Indexes for table `meet`
+-- Index pour la table `meet`
 --
 ALTER TABLE `meet`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user`
+-- Index pour la table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT for table `meet`
+-- AUTO_INCREMENT pour la table `meet`
 --
 ALTER TABLE `meet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;

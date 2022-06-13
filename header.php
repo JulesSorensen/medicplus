@@ -52,7 +52,7 @@ print '<header>
                 >
             </li>';
             }
-            if(isset($_SESSION["online"]) && isset($_SESSION["user"]["type"]) && $_SESSION["user"]["type"] == "sec"){
+            if(isset($_SESSION["online"]) && isset($_SESSION["user"]["type"])){
                 print'<li>
                     <form method="POST">
                     <button type="submit" name="deco" id="deco"><a class="md:p-4 py-2 block hover:text-gray-400" href="planif"

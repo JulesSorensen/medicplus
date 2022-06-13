@@ -24,13 +24,25 @@
                 case "planif":
                     include("pages/planif.php"); break;
 
-                    default:
-                        include("pages/home.php"); break;
+                case "signup":
+                    include("pages/signup.php"); break;
+
+                default:
+                    include("pages/home.php"); break;
                 }
             }
         } else {
-            $_GET['p'] = "login";
-            include("pages/login.php");
+
+            switch ($_GET['p']) {
+
+                case "signup":
+                    $_GET['p'] = "signup";
+                    include("pages/signup.php"); break;
+
+                default:
+                    $_GET['p'] = "login";
+                    include("pages/login.php"); break;
+                }
         }
         ?>
     </div>

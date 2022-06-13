@@ -20,6 +20,8 @@ if (isset($_POST["loginSubmit"])) {
                     $_SESSION["user"] = [
                         "id" => $Usr->id,
                         "name" => $Usr->name,
+                        "lastname" => $Usr->lastname,
+                        "mail" => $Usr->mail,
                         "type" => $Usr->type,
                     ];
                 }
@@ -27,7 +29,7 @@ if (isset($_POST["loginSubmit"])) {
         }
 
         if ($trouve) {
-            header("Refresh:0; url=index.php?p=home");
+            header("Refresh:0; url=home");
         } else {
             $err = "Nom ou mot de passe incorrect.";
         }
@@ -54,6 +56,7 @@ if (isset($_POST["loginSubmit"])) {
                 <input class="bg-gray-100 rounded px-1" type="password" name="password" required>
             </div>
             <button type="submit" name="loginSubmit" class="mx-auto mt-3 p-1 bg-gray-100 hover:bg-gray-500 hover:text-white transition-all duration-500 text-black rounded">Connexion</button>
+            <a href="signup">test</a>
         </form>
     </div>
 </div>
