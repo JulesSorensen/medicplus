@@ -28,9 +28,21 @@ for ($x = 1; $x <= $number_of_days; $x++) {
 $monthList = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 $monthIndex = $month - 1;
 
+if (isset($_POST["cancel"])) {
+  $id = $_POST["cancel"];
+  $req = "DELETE FROM `meet` WHERE id = $id";
+  $ORes = $Bdd->query($req);
+  $Reu = $ORes->fetch();
+  $message = "Le rendez-vous a bien été supprimé";
+} else if (isset($_POST["edit"])) {
+  $id = $_POST["edit"];
+  header("Refresh:0; url=planif&edit=$id");
+}
+
+
 $id = $_SESSION['user']['id'];
 if ($_SESSION["user"]['type'] == "sec") {
-  $req = "SELECT * FROM `meet` order by date asc";
+  $req = "SELECT * FROM `meet` order by date asc";  
 } else {
   $req = "SELECT * FROM `meet` WHERE userId = $id order by date asc";
 }
@@ -38,7 +50,6 @@ $ORes = $Bdd->query($req);
 $meets = [];
 if ($ORes) {
   while ($Reu = $ORes->fetch()) {
-    // print_r($Reu);
     if (isset($meets[explode(" ", $Reu->date)[0] ])) {
       array_push($meets[explode(" ", $Reu->date)[0]], $Reu);
     } else {
@@ -46,10 +57,17 @@ if ($ORes) {
     }
   }
 }
+$modalIds = [];
 
 ?>
 <title>Accueil</title>
 <div class="w-full flex justify-center"><p class="font-bold mt-3">CALENDRIER DES RENDEZ-VOUS</p></div>
+<?php 
+if (isset($message)) {
+  print "<div class='w-full flex justify-center'><p class='text-green-500 mt-3'>$message</p></div>";
+  isset($message);
+}
+?>
 <div class="container mx-auto py-3">
   <div class="wrapper bg-white rounded shadow w-full ">
     <div class="header flex justify-between border-b p-2">
@@ -133,7 +151,7 @@ if ($ORes) {
                   $go = TRUE;
                   ?>
                     <td
-                      class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                      class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-y-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
                       <div class="flex flex-col h-40 mx-auto xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto">
                         <div class="top h-5 w-full">
                           <span class="text-gray-500"><?php echo $nb+1; ?></span>
@@ -145,14 +163,57 @@ if ($ORes) {
                                 <?php 
                                   foreach ($meets[$currentDate] as $key => $value) {
                                     $name = $value->clientName;
+                                    $id = $value->id;
                                     $hour = substr(explode(" ", $value->date)[1], 0, -3);
-                                    print "<div class='event bg-purple-400 text-white rounded p-1 text-sm mb-1'>
+                                    $uniqueId = sha1($value->id.$name);
+                                    array_push($modalIds, $uniqueId);
+                                    print "<div id='$uniqueId' class='event select-none w-full bg-purple-400 text-white rounded p-1 text-sm mb-1'>
                                       <span class='event-name'>
                                         $name
                                       </span>
                                       <span class='time'>
                                         $hour
                                       </span>
+                                    </div>";
+                                    print "<div id='modal-$uniqueId' style=' background-color: rgba(0, 0, 0, 0.8)' class='fixed invisible z-40 top-0 right-0 left-0 bottom-0 h-full w-full' x-show.transition.opacity='openEventModal'>
+                                      <div class='p-4 max-w-xl mx-auto relative absolute left-0 right-0 overflow-hidden mt-24'>
+                                        <div id='close-$uniqueId' class='shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white text-gray-500 hover:text-gray-800 inline-flex items-center justify-center cursor-pointer'
+                                          x-on:click='openEventModal = !openEventModal'>
+                                          <svg class='fill-current w-6 h-6' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+                                            <path
+                                              d='M16.192 6.344L11.949 10.586 7.707 6.344 6.293 7.758 10.535 12 6.293 16.242 7.707 17.656 11.949 13.414 16.192 17.656 17.606 16.242 13.364 12 17.606 7.758z' />
+                                          </svg>
+                                        </div>
+                                        <div class='shadow w-full rounded-lg bg-white overflow-hidden w-full block p-8'>
+                                          
+                                          <h2 class='font-bold text-2xl mb-6 text-gray-800 border-b pb-2'>Rendez-vous de $name</h2>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Email: $value->clientMail</p>
+                                          </div>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Date: $value->date</p>
+                                          </div>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Lieu: $value->place</p>
+                                          </div>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Résumé: $value->resume</p>
+                                          </div>
+                                          <div class='mt-8 text-right'>
+                                            <form method='POST'>
+                                              <button name='cancel' value='$id' type='submit' class='bg-white hover:bg-red-100 text-red-700 font-semibold py-2 px-4 border border-red-300 rounded-lg shadow-sm mr-2' @click='openEventModal = !openEventModal'>
+                                                Annuler
+                                              </button>	
+                                              <button name='edit' value='$id' type='submit' class='bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm mr-2' @click='openEventModal = !openEventModal'>
+                                                Editer
+                                              </button>	
+                                              <button name='open' value='$id' type='submit' class='bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm' @click='addEvent()'>
+                                                Ouvrir
+                                              </button>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>";
                                   }
                                 ?>
@@ -168,7 +229,7 @@ if ($ORes) {
                 } else {
                   ?>
                     <td
-                      class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                      class="border bg-gray-100 p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-y-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
                       <div class="flex flex-col h-40 mx-auto xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto">
                         <div class="top h-5 w-full">
                           <span class="text-gray-500 text-sm"></span>
@@ -193,23 +254,66 @@ if ($ORes) {
                         <?php
                           if (isset($meets[$currentDate])) {
                             ?>
-                            <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
-
-                              <?php 
-                              foreach ($meets[$currentDate] as $key => $value) {
-                                $name = $value->clientName;
-                                $hour = substr(explode(" ", $value->date)[1], 0, -3);
-                                print "<div class='event bg-purple-400 text-white rounded p-1 text-sm mb-1'>
-                                  <span class='event-name'>
-                                    $name
-                                  </span>
-                                  <span class='time'>
-                                    $hour
-                                  </span>
-                                </div>";
-                              }
-                              ?>
-                            </div>
+                              <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
+                                <?php 
+                                  foreach ($meets[$currentDate] as $key => $value) {
+                                    $name = $value->clientName;
+                                    $id = $value->id;
+                                    $hour = substr(explode(" ", $value->date)[1], 0, -3);
+                                    $uniqueId = sha1($value->id.$name);
+                                    array_push($modalIds, $uniqueId);
+                                    print "<div id='$uniqueId' class='event select-none w-full bg-purple-400 text-white rounded p-1 text-sm mb-1'>
+                                      <span class='event-name'>
+                                        $name
+                                      </span>
+                                      <span class='time'>
+                                        $hour
+                                      </span>
+                                    </div>";
+                                    print "<div id='modal-$uniqueId' style=' background-color: rgba(0, 0, 0, 0.8)' class='fixed invisible z-40 top-0 right-0 left-0 bottom-0 h-full w-full' x-show.transition.opacity='openEventModal'>
+                                      <div class='p-4 max-w-xl mx-auto relative absolute left-0 right-0 overflow-hidden mt-24'>
+                                        <div id='close-$uniqueId' class='shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white text-gray-500 hover:text-gray-800 inline-flex items-center justify-center cursor-pointer'
+                                          x-on:click='openEventModal = !openEventModal'>
+                                          <svg class='fill-current w-6 h-6' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+                                            <path
+                                              d='M16.192 6.344L11.949 10.586 7.707 6.344 6.293 7.758 10.535 12 6.293 16.242 7.707 17.656 11.949 13.414 16.192 17.656 17.606 16.242 13.364 12 17.606 7.758z' />
+                                          </svg>
+                                        </div>
+                                        <div class='shadow w-full rounded-lg bg-white overflow-hidden w-full block p-8'>
+                                          
+                                          <h2 class='font-bold text-2xl mb-6 text-gray-800 border-b pb-2'>Rendez-vous de $name</h2>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Email: $value->clientMail</p>
+                                          </div>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Date: $value->date</p>
+                                          </div>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Lieu: $value->place</p>
+                                          </div>
+                                          <div class='mb-4'>
+                                            <p class='text-gray-800 block mb-1 font-bold text-sm tracking-wide'>Résumé: $value->resume</p>
+                                          </div>
+                                          <div class='mt-8 text-right'>
+                                            <form method='POST'>
+                                              <button name='cancel' value='$id' type='submit' class='bg-white hover:bg-red-100 text-red-700 font-semibold py-2 px-4 border border-red-300 rounded-lg shadow-sm mr-2' @click='openEventModal = !openEventModal'>
+                                                Annuler
+                                              </button>	
+                                              <button name='edit' value='$id' type='submit' class='bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm mr-2' @click='openEventModal = !openEventModal'>
+                                                Editer
+                                              </button>	
+                                              <button name='open' value='$id' type='submit' class='bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm' @click='addEvent()'>
+                                                Ouvrir
+                                              </button>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>";
+                                  }
+                                ?>
+                                
+                              </div>
                             <?php
                           }
                         ?>
@@ -246,7 +350,7 @@ if ($ORes) {
 </div>
 
 <script>
-  <?php echo "var currentMonth = $month;\nvar currentYear = $year;\n" ?>
+  <?php echo "let currentMonth = $month;\nlet currentYear = $year;\n" ?>
   $("#currentMonth").click(() => {
     document.location = `home`;
   });
@@ -266,4 +370,20 @@ if ($ORes) {
       document.location = `home&year=${currentYear}&month=${currentMonth+1}`;
     }
   });
+
+  <?php
+  foreach ($modalIds as $key => $value) {
+    print "
+    $('#$value').click(() => {
+      document.getElementById('modal-$value').classList.remove('invisible');
+      document.getElementById('modal-$value').classList.add('visible');
+    });
+    
+    $('#close-$value').click(() => {
+      document.getElementById('modal-$value').classList.add('invisible');
+      document.getElementById('modal-$value').classList.remove('visible');
+    });
+    ";
+  }
+  ?>
 </script>
