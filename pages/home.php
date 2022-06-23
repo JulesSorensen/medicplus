@@ -37,6 +37,11 @@ if (isset($_POST["cancel"])) {
 } else if (isset($_POST["edit"])) {
   $id = $_POST["edit"];
   header("Refresh:0; url=planif&edit=$id");
+} else if (isset($_POST["validate"])) {
+  $id = $_POST["validate"];
+  $sql = "UPDATE `meet`";
+    $sql .= " SET `validated`=true";
+    $sql .= " WHERE id=$id";
 }
 
 
@@ -167,7 +172,7 @@ if (isset($message)) {
                                     $hour = substr(explode(" ", $value->date)[1], 0, -3);
                                     $uniqueId = sha1($value->id.$name);
                                     array_push($modalIds, $uniqueId);
-                                    print "<div id='$uniqueId' class='event select-none w-full bg-purple-400 text-white rounded p-1 text-sm mb-1'>
+                                    print "<div id='$uniqueId' class='event select-none w-full"; if ($value->validated) {print" bg-green-500 ";} else {print" bg-gray-400 ";} print"text-white rounded p-1 text-sm mb-1'>
                                       <span class='event-name'>
                                         $name
                                       </span>
@@ -206,11 +211,18 @@ if (isset($message)) {
                                               </button>	
                                               <button name='edit' value='$id' type='submit' class='bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm mr-2' @click='openEventModal = !openEventModal'>
                                                 Editer
-                                              </button>	
-                                              <button name='open' value='$id' type='submit' class='bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm' @click='addEvent()'>
-                                                Ouvrir
-                                              </button>
-                                            </form>
+                                              </button>";
+                                              if ($_SESSION['user']['type'] == 'sec' && $value->validated == false) {
+                                                print"<button name='validate' value='$id' type='submit' class='bg-green-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm mr-2' @click='addEvent()'>
+                                                  Valider
+                                                </button>";
+                                              }
+                                              if ($_SESSION['user']['type'] != 'usr') {
+                                                print"<button name='open' value='$id' type='submit' class='bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm' @click='addEvent()'>
+                                                  Ouvrir
+                                                </button>";
+                                              }
+                                            print"</form>
                                           </div>
                                         </div>
                                       </div>
@@ -262,7 +274,7 @@ if (isset($message)) {
                                     $hour = substr(explode(" ", $value->date)[1], 0, -3);
                                     $uniqueId = sha1($value->id.$name);
                                     array_push($modalIds, $uniqueId);
-                                    print "<div id='$uniqueId' class='event select-none w-full bg-purple-400 text-white rounded p-1 text-sm mb-1'>
+                                    print "<div id='$uniqueId' class='event select-none w-full"; if ($value->validated) {print" bg-green-500 ";} else {print" bg-gray-400 ";} print"text-white rounded p-1 text-sm mb-1'>
                                       <span class='event-name'>
                                         $name
                                       </span>
@@ -272,7 +284,7 @@ if (isset($message)) {
                                     </div>";
                                     print "<div id='modal-$uniqueId' style=' background-color: rgba(0, 0, 0, 0.8)' class='fixed invisible z-40 top-0 right-0 left-0 bottom-0 h-full w-full' x-show.transition.opacity='openEventModal'>
                                       <div class='p-4 max-w-xl mx-auto relative absolute left-0 right-0 overflow-hidden mt-24'>
-                                        <div id='close-$uniqueId' class='shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white text-gray-500 hover:text-gray-800 inline-flex items-center justify-center cursor-pointer'
+                                        <div id='close-$uniqueId' class='shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white hover:text-gray-800 inline-flex items-center justify-center cursor-pointer'
                                           x-on:click='openEventModal = !openEventModal'>
                                           <svg class='fill-current w-6 h-6' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
                                             <path
@@ -301,11 +313,18 @@ if (isset($message)) {
                                               </button>	
                                               <button name='edit' value='$id' type='submit' class='bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm mr-2' @click='openEventModal = !openEventModal'>
                                                 Editer
-                                              </button>	
-                                              <button name='open' value='$id' type='submit' class='bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm' @click='addEvent()'>
-                                                Ouvrir
-                                              </button>
-                                            </form>
+                                              </button>";
+                                              if ($_SESSION['user']['type'] == 'sec' && $value->validated == false) {
+                                                print"<button name='validate' value='$id' type='submit' class='bg-green-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm mr-2' @click='addEvent()'>
+                                                  Valider
+                                                </button>";
+                                              }
+                                              if ($_SESSION['user']['type'] != 'usr') {
+                                                print"<button name='open' value='$id' type='submit' class='bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm' @click='addEvent()'>
+                                                  Ouvrir
+                                                </button>";
+                                              }
+                                            print"</form>
                                           </div>
                                         </div>
                                       </div>

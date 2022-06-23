@@ -42,11 +42,13 @@ if (isset($_POST["loginSubmit"])) {
 
 <title>Connexion</title>
 <div class="loginPage h-screen w-screen flex justify-center">
-    <div class="login-box w-[20rem] h-[20rem] flex flex-col justify-center align-middle m-auto p-5 bg-white rounded-lg">
-        <img class="w-20 m-auto" src="images/medicplus.png" alt="Medic+">
+    <div class="login-box w-[20rem] h-[21rem] flex flex-col justify-center align-middle m-auto p-5 bg-white rounded-lg">
+        <div class="mt-[-50px] mb-[50px]">
+            <img class="w-[7rem] m-auto" src="images/medicplus.png" alt="Medic+">
+        </div>    
         <h2 class="font-bold mx-auto mb-3">Espace de connexion</h2>
         <p class="mx-auto text-red-500"><?php if (isset($err))  {echo $err; unset($err); } ?></p>
-        <form method="POST" class="flex flex-col justify-center">
+        <form method="POST" class="flex flex-col justify-center text-center">
             <div class="user-box flex flex-col mb-1">
                 <label>Nom ou email</label>
                 <input class="bg-gray-100 rounded px-1" type="text" name="name" required>
@@ -56,7 +58,7 @@ if (isset($_POST["loginSubmit"])) {
                 <input class="bg-gray-100 rounded px-1" type="password" name="password" required>
             </div>
             <button type="submit" name="loginSubmit" class="mx-auto mt-3 p-1 bg-gray-100 hover:bg-gray-500 hover:text-white transition-all duration-500 text-black rounded">Connexion</button>
-            <a href="signup">test</a>
+            <a class="text-blue-200 hover:underline hover:decoration-wavy" href="signup">Pas de compte ? Inscrivez-vous ici</a>
         </form>
     </div>
 </div>
