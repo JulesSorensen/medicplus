@@ -1,36 +1,66 @@
 <?php
-//POST NOM/PRENOM = name
-//POST EMAIL = email 
-//POST DATE = date  
-//POST LIEU = lieu 
-//POST RESUME = resume
-//POST SUBMIT = btnsub
 
 if (isset($_POST['btnsub'])) {
-    $sql = "INSERT INTO `meet` (`userId`, `clientName`, `clientLastname`, `clientMail`, `date`, `place`, `resume`, `qcm`, `validated`)";
-    $sql .= " VALUES (".$_POST['medecins'].", '".$_POST['name']."', '".$_POST['lastname']."', '".$_POST['email']."', '".$_POST['date']." ".$_POST["hour"]."', '".$_POST['lieu']."', '".$_POST['resume']."', '', true)";
+
+    if(!isset($_POST['valid']))$_POST['valid'] = 'false';
+
+    $sql = "INSERT INTO `meet` (`userid`, `clientName`, `clientLastname`, `clientMail`, `date`, `place`, `resume`, `qcm`, `validated`)";
+    $sql .= " VALUES (".$_POST['medecins']."";
+    $sql .= ", '".$_POST['name']."'";
+    $sql .= ", '".$_POST['lastname']."'";
+    $sql .= ", '".$_POST['email']."'";
+    $sql .= ", '".$_POST['date']." ".$_POST["hour"]."'";
+    $sql .= ", '".$_POST['lieu']."'";
+    $sql .= ", '".$_POST['resume']."'";
+    $sql .= ", ''";
+    $sql .= ", ".$_POST['valid'].")";
+
+
 
     $result = $Bdd->query($sql);
     $result->fetch();
+
     $msg = "Le rendez-vous de " . $_POST['name'] . " a bien été validé";
+
 } else if (isset($_POST['btnsave'])) {
+
+    if(!isset($_POST['valid']))$_POST['valid'] = 'false';
     $_GET['edit'] = $_POST['btnsave'];
     $id = $_POST['btnsave'];
+
     $sql = "UPDATE `meet`";
-    $sql .= " SET `userid`=".$_POST['medecins'].", `clientName`='".$_POST['name']."', `clientLastname`='".$_POST['lastname']."', `clientMail`='".$_POST['email']."', `date`='".$_POST['date']." ".$_POST["hour"]."', `place`='".$_POST['lieu']."', `resume`='".$_POST['resume']."', `qcm`='', `validated`=true)";
-    $sql .= " WHERE id=$id";
+    $sql .= " SET `userid` = ".$_POST['medecins']."";
+    $sql .= ", `clientName` = '".$_POST['name']."'";
+    $sql .= ", `clientLastname` = '".$_POST['lastname']."'";
+    $sql .= ", `clientMail` = '".$_POST['email']."'";
+    $sql .= ", `date` = '".$_POST['date']." ".$_POST["hour"]."'";
+    $sql .= ", `place` = '".$_POST['lieu']."'";
+    $sql .= ", `resume` = '".$_POST['resume']."'";
+    $sql .= ", `qcm` = ''";
+    $sql .= ", `validated` = ".$_POST['valid']."";
+    $sql .= " WHERE id = ".$id."";
+
+    // print $sql;
+    // exit();
 
     $result = $Bdd->query($sql);
     $result->fetch();
+
     $msg = "Le rendez-vous de " . $_POST['name'] . " a bien été mis à jour";
 }
 
 if (isset($_GET['edit'])) {
+
     $id = $_GET['edit'];
-    $sql = "SELECT * FROM `meet` WHERE `id`=$id";
+
+    $sql = "SELECT *";
+    $sql .= " FROM `meet`";
+    $sql .= " WHERE `id`=$id";
 
     $result = $Bdd->query($sql);
+
     if ($Rdv = $result->fetch()) {
+
         print '<title>Plannification</title>
             <form method="post">
             <div class="form1 h-screen flex justify-center flex-col px-96">';
@@ -40,33 +70,33 @@ if (isset($_GET['edit'])) {
             }  
                 print'<label for="name">Prénom :</label>
                 <input class="rounded pl-1" name="name" id="name" type="text" value="'; 
-                    print"".$Rdv->clientName."";
-                print'">
+                    print''.$Rdv->clientName.'';
+                print'" required>
         
                 <label for="name">Nom :</label>
                 <input class="rounded pl-1" name="lastname" id="lastname" type="text" value="'; 
-                    
-                print'">
+                print''.$Rdv->clientLastname.'';
+                print'" required>
         
                 <label for="email">Addresse Mail :</label>
                 <input class="rounded pl-1" name="email" id="email" type="mail" value="';
-                    print"".$Rdv->clientMail."";
-                print'">
+                    print''.$Rdv->clientMail.'';
+                print'" required>
         
                 <label for="date">Date :</label>
                 <input class="rounded pl-1" name="date" id="date" type="date" value="';
-                    print"".explode(" ", $Rdv->date)[0]."";
-                print'">
+                    print''.explode(' ', $Rdv->date)[0].'';
+                print'" required>
         
                 <label for="hour">Heure :</label>
                 <input class="rounded pl-1" name="hour" id="hour" type="time" value="';
-                    print"".explode(" ", $Rdv->date)[1]."";
-                print'">
+                    print''.explode(' ', $Rdv->date)[1].'';
+                print'" required>
         
                 <label for="lieu">Lieu :</label>
                 <input class="rounded pl-1" name="lieu" id="lieu" type="text" value="';
-                    print"".$Rdv->place."";
-                print'">
+                    print''.$Rdv->place.'';
+                print'" required>
         
                 <label for="resume">Résumé :</label>
                 <textarea class="rounded pl-1" name="resume" id="resume" value="';
@@ -91,12 +121,17 @@ if (isset($_GET['edit'])) {
                     foreach ($medecins as $key) {
                         print "<option value='$key->id'>".$key->name."</option>";
                     }
-                print'</select>
-                <button class="rounded bg-white m-3 w-52 mx-auto md:p-4 py-2 hover:bg-green-500 hover:text-black" type="submit" name="btnsave" id="btnsave" value="'.$id.'">Sauvegarder</button>
+                print'</select>';
+                if($_SESSION['user']['type'] == 'sec' && $Rdv->validated != true){
+                    print'<label for="valid">Valider le Rendez-vous</label>
+                    <input class=" m-3 mx-auto md:p-4 py-2" id="valid" name="valid" value=true type="checkbox">';
+                }
+                print'<button class="rounded bg-white m-3 w-52 mx-auto md:p-4 py-2 hover:bg-green-500 hover:text-black" type="submit" name="btnsave" id="btnsave" value="'.$id.'">Sauvegarder</button>
             </div>
         </form>';
     }
 } else {
+
     print '<title>Plannification</title>
         <form method="post">
         <div class="form1 h-screen flex justify-center flex-col px-96">';
@@ -109,32 +144,32 @@ if (isset($_GET['edit'])) {
             print'<label for="name">Prénom :</label>
             <input class="rounded pl-1" name="name" id="name" type="text" value="'; 
             if($_SESSION['user']['type'] == 'usr'){
-                print"".$_SESSION['user']['name']."";
+                print''.$_SESSION['user']['name'].'';
             }
-            print'">
+            print'" required>
     
             <label for="name">Nom :</label>
             <input class="rounded pl-1" name="lastname" id="lastname" type="text" value="'; 
             if($_SESSION['user']['type'] == 'usr'){
-                print"".$_SESSION['user']['lastname']."";
+                print''.$_SESSION['user']['lastname'].'';
             }
-            print'">
+            print'" required>
     
             <label for="email">Addresse Mail :</label>
             <input class="rounded pl-1" name="email" id="email" type="mail" value="'; 
             if($_SESSION['user']['type'] == 'usr'){
-                print"".$_SESSION['user']['mail']."";
+                print''.$_SESSION['user']['mail'].'';
             }
-            print'">
+            print'" required>
     
             <label for="date">Date :</label>
-            <input class="rounded pl-1" name="date" id="date" type="date">
+            <input class="rounded pl-1" name="date" id="date" type="date" required>
     
             <label for="hour">Heure :</label>
-            <input class="rounded pl-1" name="hour" id="hour" type="time">
+            <input class="rounded pl-1" name="hour" id="hour" type="time" required>
     
             <label for="lieu">Lieu :</label>
-            <input class="rounded pl-1" name="lieu" id="lieu" type="text">
+            <input class="rounded pl-1" name="lieu" id="lieu" type="text" required>
     
             <label for="resume">Résumé :</label>
             <textarea class="rounded pl-1" name="resume" id="resume"></textarea>
@@ -157,8 +192,12 @@ if (isset($_GET['edit'])) {
                 foreach ($medecins as $key) {
                     print "<option value='$key->id'>".$key->name."</option>";
                 }
-            print'</select>
-            <button class="rounded bg-white m-3 w-52 mx-auto md:p-4 py-2 hover:bg-green-500 hover:text-black" type="submit" name="btnsub" id="btnsub">Envoyer</button>
+            print'</select>';
+            if($_SESSION['user']['type'] == 'sec'){
+                print'<label for="valid">Valider le Rendez-vous</label>
+                <input class=" m-3 mx-auto md:p-4 py-2" id="valid" name="valid" value=true type="checkbox">';
+            }
+            print'<button class="rounded bg-white m-3 w-52 mx-auto md:p-4 py-2 hover:bg-green-500 hover:text-black" type="submit" name="btnsub" id="btnsub">Envoyer</button>
         </div>
     </form>';
 }
