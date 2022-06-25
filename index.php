@@ -20,15 +20,14 @@
             if(isset($_GET['p'])) {
                 include("header.php");
                 switch ($_GET['p']) {
-                
-                case "planif":
-                    include("pages/planif.php"); break;
-
-                case "signup":
-                    include("pages/signup.php"); break;
-
-                default:
-                    include("pages/home.php"); break;
+                    case "report":
+                        include("pages/report.php"); break;
+                    case "planif":
+                        include("pages/planif.php"); break;
+                    case "signup":
+                        include("pages/signup.php"); break;
+                    default:
+                        include("pages/home.php"); break;
                 }
             }
         } else {

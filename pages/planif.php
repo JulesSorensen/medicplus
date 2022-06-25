@@ -30,13 +30,13 @@ if (isset($_POST['btnsub'])) {
 
     $sql = "UPDATE `meet`";
     $sql .= " SET `userid` = ".$_POST['medecins']."";
-    $sql .= ", `clientName` = '".$_POST['name']."'";
-    $sql .= ", `clientLastname` = '".$_POST['lastname']."'";
-    $sql .= ", `clientMail` = '".$_POST['email']."'";
-    $sql .= ", `date` = '".$_POST['date']." ".$_POST["hour"]."'";
-    $sql .= ", `place` = '".$_POST['lieu']."'";
-    $sql .= ", `resume` = '".$_POST['resume']."'";
-    $sql .= ", `qcm` = ''";
+    $sql .= ", `clientName` = \"".$_POST['name']."\"";
+    $sql .= ", `clientLastname` = \"".$_POST['lastname']."\"";
+    $sql .= ", `clientMail` = \"".$_POST['email']."\"";
+    $sql .= ", `date` = \"".$_POST['date']." ".$_POST["hour"]."\"";
+    $sql .= ", `place` = \"".$_POST['lieu']."\"";
+    $sql .= ", `resume` = \"".$_POST['resume']."\"";
+    $sql .= ", `qcm` = \"\"";
     $sql .= ", `validated` = ".$_POST['valid']."";
     $sql .= " WHERE id = ".$id."";
 
@@ -123,8 +123,8 @@ if (isset($_GET['edit'])) {
                     }
                 print'</select>';
                 if($_SESSION['user']['type'] == 'sec' && $Rdv->validated != true){
-                    print'<label for="valid">Valider le Rendez-vous</label>
-                    <input class=" m-3 mx-auto md:p-4 py-2" id="valid" name="valid" value=true type="checkbox">';
+                    print'<div class="flex flex-row items-center align-middle"><label for="valid">Valider le Rendez-vous</label>
+                    <input class="ml-3" id="valid" name="valid" value=true type="checkbox"></div>';
                 }
                 print'<button class="rounded bg-white m-3 w-52 mx-auto md:p-4 py-2 hover:bg-green-500 hover:text-black" type="submit" name="btnsave" id="btnsave" value="'.$id.'">Sauvegarder</button>
             </div>
@@ -194,8 +194,8 @@ if (isset($_GET['edit'])) {
                 }
             print'</select>';
             if($_SESSION['user']['type'] == 'sec'){
-                print'<label for="valid">Valider le Rendez-vous</label>
-                <input class=" m-3 mx-auto md:p-4 py-2" id="valid" name="valid" value=true type="checkbox">';
+                print'<div class="flex flex-row items-center align-middle"><label for="valid">Valider le Rendez-vous</label>
+                <input class="ml-3" id="valid" name="valid" value=true type="checkbox"></div>';
             }
             print'<button class="rounded bg-white m-3 w-52 mx-auto md:p-4 py-2 hover:bg-green-500 hover:text-black" type="submit" name="btnsub" id="btnsub">Envoyer</button>
         </div>

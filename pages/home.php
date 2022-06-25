@@ -37,6 +37,9 @@ if (isset($_POST["cancel"])) {
 } else if (isset($_POST["edit"])) {
   $id = $_POST["edit"];
   header("Refresh:0; url=planif&edit=$id");
+} else if (isset($_POST["open"])) {
+  $id = $_POST["open"];
+  header("Refresh:0; url=report&meet=$id");
 } else if (isset($_POST["validate"])) {
   $id = $_POST["validate"];
   $sql = "UPDATE `meet`";
@@ -51,7 +54,7 @@ $id = $_SESSION['user']['id'];
 if ($_SESSION["user"]['type'] == "sec") {
   $req = "SELECT * FROM `meet` order by date asc";  
 } else {
-  $req = "SELECT * FROM `meet` WHERE userId = $id order by date asc";
+  $req = "SELECT * FROM `meet` WHERE userid = $id or clientid = $id  order by date asc";
 }
 $ORes = $Bdd->query($req);
 $meets = [];
