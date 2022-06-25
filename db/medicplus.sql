@@ -31,7 +31,7 @@ USE `medicplus`;
 
 CREATE TABLE `meet` (
   `id` int(11) NOT NULL,
-  `userid` varchar(255) DEFAULT NULL,
+  `userid` int(11) DEFAULT NULL,
   `clientid` int(11) DEFAULT NULL,
   `clientName` varchar(255) DEFAULT NULL,
   `clientLastname` varchar(255) NOT NULL,
@@ -48,9 +48,9 @@ CREATE TABLE `meet` (
 --
 
 INSERT INTO `meet` (`id`, `userid`, `clientid`, `clientName`, `clientLastname`, `clientMail`, `date`, `place`, `resume`, `qcm`, `validated`) VALUES
-(2, '2', 3, 'Morike', 'Konate', 'mkonate@efficom-lille.com', '2022-06-03 00:55:00', 'Efficom', 'Probablement le covid !', 'Est-ce qu\'il va bien ?::On espère fort;;Il est positif au covid ?::Oui comme tout les jours;;A-t-il bien payé ?::Oui, très cher !', 1),
-(3, '2', 1, 'Jules', 'Ladeiro', 'jladeiro@myges.fr', '2022-06-14 23:01:00', 'Efficom', 'Ca va pas vraiment, mots de têtes', '::;;::;;::;;::;;::', 1),
-(4, '2', 3, 'Morike', 'Konate', 'mkonate@efficom-lille.com', '2022-06-16 08:08:00', 'Efficom Lille', 'Encore le covid, Lucas prend en charge !', '', 0);
+(2, 2, 3, 'Morike', 'Konate', 'mkonate@efficom-lille.com', '2022-06-03 00:55:00', 'Efficom', 'Probablement le covid !', 'Est-ce qu\'il va bien ?::On espère fort;;Il est positif au covid ?::Oui comme tout les jours;;A-t-il bien payé ?::Oui, très cher !', 1),
+(3, 2, 1, 'Jules', 'Ladeiro', 'jladeiro@myges.fr', '2022-06-14 23:01:00', 'Efficom', 'Ca va pas vraiment, mots de têtes', '::;;::;;::;;::;;::', 1),
+(4, 2, 3, 'Morike', 'Konate', 'mkonate@efficom-lille.com', '2022-06-16 08:08:00', 'Efficom Lille', 'Encore le covid, Lucas prend en charge !', '::;;::;;::;;::;;::', 0);
 
 -- --------------------------------------------------------
 
@@ -74,7 +74,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `name`, `lastname`, `password`, `mail`, `type`) VALUES
 (1, 'Jules', 'Ladeiro', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'jladeiro@myges.fr', 'sec'),
 (2, 'Yan', 'Souetre', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'ysouetre@myges.fr', 'med'),
-(3, 'Morike', 'Konate', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'lcornelis@myges.fr', 'usr');
+(3, 'Morike', 'Konate', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'mkonate@myges.fr', 'usr');
+(4, 'Lucas', 'Cornelis', '9cf95dacd226dcf43da376cdb6cbba7035218921', 'lcornelis@myges.fr', 'med');
 
 --
 -- Indexes for dumped tables
