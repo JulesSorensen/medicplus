@@ -4,8 +4,17 @@ if (isset($_POST['btnsub'])) {
 
     if(!isset($_POST['valid']))$_POST['valid'] = 'false';
 
-    $sql = "INSERT INTO `meet` (`userid`, `clientName`, `clientLastname`, `clientMail`, `date`, `place`, `resume`, `qcm`, `validated`)";
+    $sql = "INSERT INTO `meet` (`userid`, `clientId`, `clientName`, `clientLastname`, `clientMail`, `date`, `place`, `resume`, `qcm`, `validated`)";
     $sql .= " VALUES (".$_POST['medecins']."";
+    
+    $sql2 = 'SELECT id FROM `user` where `mail`="'.$_POST['email'].'"';
+    $result = $Bdd->query($sql2);
+    if ($Usr = $result->fetch()) {
+        $sql .= ", '".$Usr->id."'";
+    } else {
+        $sql .= ", NULL";
+    }
+
     $sql .= ", '".$_POST['name']."'";
     $sql .= ", '".$_POST['lastname']."'";
     $sql .= ", '".$_POST['email']."'";
